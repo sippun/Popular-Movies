@@ -28,15 +28,22 @@ import java.util.ArrayList;
  */
 
 public class MovieFragment extends Fragment {
+    private ArrayList<String> mPosterPaths;
 
     public MovieFragment() {
+    }
+
+    @Override
+    public void onStart() {
+        mPosterPaths = new ArrayList<>();
+        new FetchPosterTask().execute();
+        super.onStart();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-        new FetchPosterTask().execute();
     }
 
     @Nullable
@@ -45,16 +52,16 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview_poster);
-        gridView.setAdapter(new PosterAdapter(getActivity()));
+        gridView.setAdapter(new PosterAdapter(getActivity(), mPosterPaths));
         return rootView;
     }
 
-    private class FetchPosterTask extends AsyncTask<Void, Void, Void> {
+    private class FetchPosterTask extends AsyncTask<Void, Void, ArrayList<String>> {
 
         private final String LOG_TAG = FetchPosterTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected ArrayList<String> doInBackground(Void... params) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -126,12 +133,11 @@ public class MovieFragment extends Fragment {
 
             // Convert JSON string
             try {
-                getMovieListFromJson(movieListJsonStr);
+                return getMovieListFromJson(movieListJsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 return null;
             }
-            return null;
         }
 
         private ArrayList<String> getMovieListFromJson(String JsonStr) throws JSONException {
@@ -143,10 +149,15 @@ public class MovieFragment extends Fragment {
 
             ArrayList<String> posterPaths = new ArrayList();
             for (int i = 0; i < movieArray.length(); i++) {
-                String path = movieArray.getJSONObject(i).getString(TMD_POSTER);
-                posterPaths.add(path);
+                posterPaths.add(movieArray.getJSONObject(i).getString(TMD_POSTER));
             }
             return posterPaths;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> strings) {
+            mPosterPaths.addAll(strings);
+            super.onPostExecute(strings);
         }
     }
 }
