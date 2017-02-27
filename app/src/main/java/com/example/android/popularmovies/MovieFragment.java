@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -29,6 +32,8 @@ import java.util.ArrayList;
 
 public class MovieFragment extends Fragment {
     private ArrayList<String> mPosterPaths;
+    GridView gridView;
+    PosterAdapter mPosterAdapter;
 
     public MovieFragment() {
     }
@@ -37,6 +42,7 @@ public class MovieFragment extends Fragment {
     public void onStart() {
         mPosterPaths = new ArrayList<>();
         new FetchPosterTask().execute();
+        setHasOptionsMenu(true);
         super.onStart();
     }
 
@@ -51,9 +57,30 @@ public class MovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_poster);
-        gridView.setAdapter(new PosterAdapter(getActivity(), mPosterPaths));
+        gridView = (GridView) rootView.findViewById(R.id.gridview_poster);
+        mPosterAdapter = new PosterAdapter(getActivity(), mPosterPaths);
+        gridView.setAdapter(mPosterAdapter);
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.moviefragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            refreshPosters();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshPosters() {
+        mPosterAdapter.setPaths(mPosterPaths);
+        mPosterAdapter.notifyDataSetChanged();
     }
 
     private class FetchPosterTask extends AsyncTask<Void, Void, ArrayList<String>> {
@@ -80,7 +107,7 @@ public class MovieFragment extends Fragment {
                 final String PAGE_PARAM = "page";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(APPID_PARAM, "***REMOVED***")
+                        .appendQueryParameter(APPID_PARAM, "44f663567e9727e110d2bbe32741f733")
                         .appendQueryParameter(LANG_PARAM, lang)
                         .appendQueryParameter(PAGE_PARAM, Integer.toString(numPages))
                         .build();

@@ -28,6 +28,10 @@ public class PosterAdapter extends BaseAdapter {
         mPosterPaths = p;
     }
 
+    public void setPaths(ArrayList<String> p) {
+        mPosterPaths = p;
+    }
+
     @Override
     public int getCount() {
         if (mPosterPaths != null)
