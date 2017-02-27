@@ -26,6 +26,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.example.android.popularmovies.BuildConfig.TMD_API_KEY;
+
 /**
  * Created by Joel on 2/21/2017.
  */
@@ -107,7 +109,7 @@ public class MovieFragment extends Fragment {
                 final String PAGE_PARAM = "page";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(APPID_PARAM, "44f663567e9727e110d2bbe32741f733")
+                        .appendQueryParameter(APPID_PARAM, TMD_API_KEY)
                         .appendQueryParameter(LANG_PARAM, lang)
                         .appendQueryParameter(PAGE_PARAM, Integer.toString(numPages))
                         .build();

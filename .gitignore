@@ -8,3 +8,8 @@
 /captures
 .externalNativeBuild
 /app/src/main/res/drawable/
+
+..bfg-report/
+bfg-1.12.15.jar
+replacements.txt
+Popular-Movies.git/
