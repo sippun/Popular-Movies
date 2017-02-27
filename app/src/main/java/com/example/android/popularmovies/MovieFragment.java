@@ -76,7 +76,7 @@ public class MovieFragment extends Fragment {
         if (id == R.id.action_refresh) {
             refreshPosters();
             return true;
-        }
+        } else if (id == R.id.)
         return super.onOptionsItemSelected(item);
     }
 
@@ -102,8 +102,10 @@ public class MovieFragment extends Fragment {
             int numPages = 1;
 
             try {
+
                 final String BASE_URL =
                     "https://api.themoviedb.org/3/movie/popular?";
+                    "https://api.themoviedb.org/3/movie/top_rated?";
                 final String APPID_PARAM = "api_key";
                 final String LANG_PARAM = "language";
                 final String PAGE_PARAM = "page";
@@ -186,6 +188,7 @@ public class MovieFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
             mPosterPaths.addAll(strings);
+            refreshPosters();
             super.onPostExecute(strings);
         }
     }

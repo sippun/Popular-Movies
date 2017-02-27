@@ -9,6 +9,8 @@
 .externalNativeBuild
 /app/src/main/res/drawable/
 
+build.gradle
+
 ..bfg-report/
 bfg-1.12.15.jar
 replacements.txt

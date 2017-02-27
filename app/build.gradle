@@ -18,7 +18,7 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField 'String', 'TMD_API_KEY', "API_KEY"
+        it.buildConfigField 'String', 'TMD_API_KEY', "\"44f663567e9727e110d2bbe32741f733\"  "
     }
 }
 
