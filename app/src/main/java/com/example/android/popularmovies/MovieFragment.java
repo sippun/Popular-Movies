@@ -1,8 +1,10 @@
 package com.example.android.popularmovies;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -81,6 +83,7 @@ public class MovieFragment extends Fragment {
     }
 
     private void refreshPosters() {
+        new FetchPosterTask().execute();
         mPosterAdapter.setPaths(mPosterPaths);
         mPosterAdapter.notifyDataSetChanged();
     }
@@ -101,11 +104,19 @@ public class MovieFragment extends Fragment {
             String lang = "en-US";
             int numPages = 1;
 
+            // Get sort order from settings
+            SharedPreferences mySettings = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            String order = mySettings.getString(
+                    getResources().getString(R.string.pref_sort_key),
+                    getString(R.string.pref_sort_popular));
             try {
-
-                final String BASE_URL =
-                    "https://api.themoviedb.org/3/movie/popular?";
-//                    "https://api.themoviedb.org/3/movie/top_rated?";
+                String BASE_URL;
+                if (order.equals(getString(R.string.pref_sort_popular))) {
+                    BASE_URL = "https://api.themoviedb.org/3/movie/popular?";
+                } else {
+                    BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?";
+                }
                 final String APPID_PARAM = "api_key";
                 final String LANG_PARAM = "language";
                 final String PAGE_PARAM = "page";
@@ -188,7 +199,8 @@ public class MovieFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
             mPosterPaths.addAll(strings);
-            refreshPosters();
+            mPosterAdapter.setPaths(mPosterPaths);
+            mPosterAdapter.notifyDataSetChanged();
             super.onPostExecute(strings);
         }
     }
