@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -36,8 +38,8 @@ import static com.example.android.popularmovies.BuildConfig.TMD_API_KEY;
 
 public class MovieFragment extends Fragment {
     private ArrayList<String> mPosterPaths;
-    GridView gridView;
-    PosterAdapter mPosterAdapter;
+    private GridView gridView;
+    private PosterAdapter mPosterAdapter;
 
     public MovieFragment() {
     }
@@ -64,6 +66,17 @@ public class MovieFragment extends Fragment {
         gridView = (GridView) rootView.findViewById(R.id.gridview_poster);
         mPosterAdapter = new PosterAdapter(getActivity(), mPosterPaths);
         gridView.setAdapter(mPosterAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                String movieID = "Movie ID goes here";
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, movieID);
+                startActivity(detailIntent);
+            }
+        });
+
         return rootView;
     }
 

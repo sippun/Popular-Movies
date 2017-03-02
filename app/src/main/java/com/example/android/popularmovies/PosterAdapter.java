@@ -2,7 +2,6 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -65,10 +64,7 @@ public class PosterAdapter extends BaseAdapter {
                 .appendEncodedPath(mPosterPaths.get(position))
                 .build();
 
-        String path = builtUri.toString();
-        Log.v(LOG_TAG, path);
-
-        Picasso.with(mContext).load(path).into(imgView);
+        Picasso.with(mContext).load(builtUri.toString()).into(imgView);
         return imgView;
     }
 
