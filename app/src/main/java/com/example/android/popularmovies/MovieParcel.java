@@ -47,5 +47,5 @@ public class MovieParcel implements Parcelable {
         public MovieParcel[] newArray(int i) {
             return new MovieParcel[i];
         }
-    }
+    };
 }

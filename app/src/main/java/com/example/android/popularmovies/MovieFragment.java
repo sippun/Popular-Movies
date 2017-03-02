@@ -37,16 +37,16 @@ import static com.example.android.popularmovies.BuildConfig.TMD_API_KEY;
  */
 
 public class MovieFragment extends Fragment {
-    private ArrayList<String> mPosterPaths;
+
     private GridView gridView;
-    private PosterAdapter mPosterAdapter;
+    private MovieAdapter mMovieAdapter;
+    private ArrayList<MovieParcel> movieList;
 
     public MovieFragment() {
     }
 
     @Override
     public void onStart() {
-        mPosterPaths = new ArrayList<>();
         new FetchPosterTask().execute();
         setHasOptionsMenu(true);
         super.onStart();
@@ -64,13 +64,15 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         gridView = (GridView) rootView.findViewById(R.id.gridview_poster);
-        mPosterAdapter = new PosterAdapter(getActivity(), mPosterPaths);
-        gridView.setAdapter(mPosterAdapter);
+
+        movieList = new ArrayList<MovieParcel>();
+        mMovieAdapter = new MovieAdapter(getActivity(), movieList);
+        gridView.setAdapter(mMovieAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                String movieID = "Movie ID goes here";
+                String movieID = mMovieAdapter.getItem(position).movieID;
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, movieID);
                 startActivity(detailIntent);
@@ -97,16 +99,15 @@ public class MovieFragment extends Fragment {
 
     private void refreshPosters() {
         new FetchPosterTask().execute();
-        mPosterAdapter.setPaths(mPosterPaths);
-        mPosterAdapter.notifyDataSetChanged();
+        mMovieAdapter.notifyDataSetChanged();
     }
 
-    private class FetchPosterTask extends AsyncTask<Void, Void, ArrayList<String>> {
+    private class FetchPosterTask extends AsyncTask<Void, Void, Void> {
 
         private final String LOG_TAG = FetchPosterTask.class.getSimpleName();
 
         @Override
-        protected ArrayList<String> doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -188,33 +189,36 @@ public class MovieFragment extends Fragment {
 
             // Convert JSON string
             try {
-                return getMovieListFromJson(movieListJsonStr);
+                movieList = getMovieListFromJson(movieListJsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                return null;
             }
+            return null;
         }
 
-        private ArrayList<String> getMovieListFromJson(String JsonStr) throws JSONException {
+        private ArrayList<MovieParcel> getMovieListFromJson(String JsonStr) throws JSONException {
             final String TMD_RESULTS = "results";
+            final String TMD_ID = "id";
             final String TMD_POSTER = "poster_path";
 
             JSONObject movieJson = new JSONObject(JsonStr);
             JSONArray movieArray = movieJson.getJSONArray(TMD_RESULTS);
 
-            ArrayList<String> posterPaths = new ArrayList();
+            ArrayList<MovieParcel> movieList = new ArrayList();
             for (int i = 0; i < movieArray.length(); i++) {
-                posterPaths.add(movieArray.getJSONObject(i).getString(TMD_POSTER));
+                MovieParcel movie = new MovieParcel(
+                        movieArray.getJSONObject(i).getString(TMD_ID),
+                        movieArray.getJSONObject(i).getString(TMD_POSTER));
+                movieList.add(movie);
             }
-            return posterPaths;
+            return movieList;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> strings) {
-            mPosterPaths.addAll(strings);
-            mPosterAdapter.setPaths(mPosterPaths);
-            mPosterAdapter.notifyDataSetChanged();
-            super.onPostExecute(strings);
+        protected void onPostExecute(Void aVoid) {
+            mMovieAdapter.setList(movieList);
+            mMovieAdapter.notifyDataSetChanged();
+            super.onPostExecute(aVoid);
         }
     }
 }
