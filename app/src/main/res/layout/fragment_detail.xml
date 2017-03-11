@@ -1,9 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_text"/>
-</LinearLayout>
+        android:id="@+id/detail_movie_title_frame"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:layout_alignParentTop="true"
+        tools:background="@color/colorPrimaryDark">
+
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/detail_movie_title"
+            android:text="stupid movie"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_movie_thumb_frame"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_below="@id/detail_movie_title_frame"
+        android:layout_alignParentLeft="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/detail_movie_thumb"
+            android:layout_below="@id/detail_movie_title_frame" />
+    </FrameLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_movie_year"
+        android:layout_below="@id/detail_movie_title_frame"
+        android:layout_toRightOf="@id/detail_movie_thumb_frame"
+        android:layout_alignParentRight="true"
+        android:text="year" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_movie_min"
+        android:layout_below="@id/detail_movie_year"
+        android:layout_toRightOf="@id/detail_movie_thumb_frame"
+        android:layout_alignParentRight="true"
+        android:text="minutes" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_movie_rating"
+        android:layout_below="@id/detail_movie_min"
+        android:layout_toRightOf="@id/detail_movie_thumb_frame"
+        android:layout_alignParentRight="true"
+        android:text="rating" />
+
+
+
+</RelativeLayout>

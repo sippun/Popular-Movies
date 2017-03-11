@@ -115,6 +115,7 @@ public class MovieFragment extends Fragment {
             // Will contain the raw JSON response as a string.
             String movieListJsonStr = null;
 
+            // Query strings
             String lang = "en-US";
             int numPages = 1;
 
